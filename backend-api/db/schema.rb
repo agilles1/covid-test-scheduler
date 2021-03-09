@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_09_175052) do
+ActiveRecord::Schema.define(version: 2021_03_09_185551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "appointments", force: :cascade do |t|
+    t.bigint "patient_id"
+    t.bigint "test_time_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["patient_id"], name: "index_appointments_on_patient_id"
+    t.index ["test_time_id"], name: "index_appointments_on_test_time_id"
+  end
 
   create_table "patients", force: :cascade do |t|
     t.string "first_name"
@@ -24,19 +33,9 @@ ActiveRecord::Schema.define(version: 2021_03_09_175052) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "test_appointment_patients", force: :cascade do |t|
-    t.bigint "patient_id"
-    t.bigint "test_appointment_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["patient_id"], name: "index_test_appointment_patients_on_patient_id"
-    t.index ["test_appointment_id"], name: "index_test_appointment_patients_on_test_appointment_id"
-  end
-
-  create_table "test_appointments", force: :cascade do |t|
-    t.date "date"
-    t.time "start"
-    t.time "end"
+  create_table "test_times", force: :cascade do |t|
+    t.datetime "time"
+    t.integer "duration"
     t.integer "max_tests"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
