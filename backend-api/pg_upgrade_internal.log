@@ -1,0 +1,21 @@
+Running in verbose mode
+
+-----------------------------------------------------------------
+  pg_upgrade run on Tue Mar  9 11:44:47 2021
+-----------------------------------------------------------------
+
+could not open version file "/usr/local/var/postgres13.2/PG_VERSION": No such file or directory
+
+-----------------------------------------------------------------
+  pg_upgrade run on Tue Mar  9 11:45:18 2021
+-----------------------------------------------------------------
+
+You must identify the directory where the old cluster binaries reside.
+Please use the -b command-line option or the PGBINOLD environment variable.
+
+-----------------------------------------------------------------
+  pg_upgrade run on Tue Mar  9 11:45:33 2021
+-----------------------------------------------------------------
+
+You must identify the directory where the old cluster binaries reside.
+Please use the -b command-line option or the PGBINOLD environment variable.

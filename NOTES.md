@@ -6,11 +6,12 @@ COVID TEST SCHEDULER
         Date:date
         Start:time
         Length: 
-        MaxTests 
+        MaxTests
 
     Patient 
         ID
-        Name
+        FirstName
+        LastName
         Email
         JobTitle
 
