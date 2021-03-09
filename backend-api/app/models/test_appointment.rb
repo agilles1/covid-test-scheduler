@@ -1,0 +1,2 @@
+class TestAppointment < ApplicationRecord
+end

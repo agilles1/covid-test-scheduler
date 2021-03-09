@@ -1,21 +1,23 @@
 COVID TEST SCHEDULER
 
 [] Models 
-    Appointment
+    TestAppointment
         ID
         Date:date
         Start:time
-        Length: 
-        MaxTests
-
+        End:time 
+        MaxTests:integer
+        
     Patient 
         ID
-        FirstName
-        LastName
-        Email
-        JobTitle
+        FirstName:string
+        LastName:string
+        Email:string
+        JobTitle:string
 
-    AppointmentPatient
+    TestAppointmentPatients
         ID
-        Appointment_id
-        Patient_id
+        belongs_to: Appointment
+        belongs_to: Patient
+
+

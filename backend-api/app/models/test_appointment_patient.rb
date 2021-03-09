@@ -1,0 +1,2 @@
+class TestAppointmentPatient < ApplicationRecord
+end
