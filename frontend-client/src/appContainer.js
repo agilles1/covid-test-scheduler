@@ -11,22 +11,24 @@ class AppContainer {
     }
 
     renderTestTimes(){
-        const table = document.getElementById('appointment-table')
+        const col = document.getElementById('appointments')
             Appointment.all.forEach(apt => {
-                const row = table.insertRow()
-                this.insertBlankRows(table, apt)
-                const cell = row.insertCell()
-                cell.innerHTML = `<div id = ${apt.id}>${apt.time}</div>` //Add Test_Time id
+                console.log(col)
+                const aptDiv = document.createElement('div')
+                aptDiv.setAttribute("id", `${apt.id}`)
+                aptDiv.innerHTML = apt.time
+                col.appendChild(aptDiv)
+                this.insertBlankDivs(col, apt)
             });   
     }
 
-    insertBlankRows(table, apt){
+    insertBlankDivs(aptDiv, apt){
         for (let index = 0; index < apt.max_tests; index++) {
-            const row = table.insertRow()     
-            const cell = row.insertCell()
-            cell.innerHTML = `<div id = ${apt.id}-${index}></div>`           
+            const aptSpace = document.createElement('div')
+            aptSpace.setAttribute("id", `${apt.id}-${index}`)
+            aptSpace.innerHTML = "<br>"
+            aptDiv.appendChild(aptSpace)
         }
-
     }
 
 
