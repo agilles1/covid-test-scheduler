@@ -14,9 +14,19 @@ class AppContainer {
         const table = document.getElementById('appointment-table')
             Appointment.all.forEach(apt => {
                 const row = table.insertRow()
+                this.insertBlankRows(table, apt)
                 const cell = row.insertCell()
-                cell.innerHTML = `<div>${apt.time}</div>` //Add Test_Time id
+                cell.innerHTML = `<div id = ${apt.id}>${apt.time}</div>` //Add Test_Time id
             });   
+    }
+
+    insertBlankRows(table, apt){
+        for (let index = 0; index < apt.max_tests; index++) {
+            const row = table.insertRow()     
+            const cell = row.insertCell()
+            cell.innerHTML = `<div id = ${apt.id}-${index}></div>`           
+        }
+
     }
 
 
