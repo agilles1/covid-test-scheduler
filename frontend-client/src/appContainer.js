@@ -14,7 +14,7 @@ class AppContainer {
         const col = document.getElementById('appointments')
             Appointment.all.forEach(apt => {
                 console.log(col)
-                const aptDiv = document.createElement('div')
+                const aptDiv = document.createElement('h4')
                 aptDiv.setAttribute("id", `${apt.id}`)
                 aptDiv.innerHTML = apt.time
                 col.appendChild(aptDiv)
@@ -26,10 +26,25 @@ class AppContainer {
         for (let index = 0; index < apt.max_tests; index++) {
             const aptSpace = document.createElement('div')
             aptSpace.setAttribute("id", `${apt.id}-${index}`)
+            aptSpace.setAttribute("class", "appointment-time")
             aptSpace.innerHTML = "<br>"
             aptDiv.appendChild(aptSpace)
         }
     }
+
+    allowDrop(ev) {
+        ev.preventDefault();
+      }
+      
+    drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+      }
+      
+    drop(ev) {
+        ev.preventDefault();
+        const data = ev.dataTransfer.getData("text");
+        ev.target.appendChild(document.getElementById(data));
+      }
 
 
  

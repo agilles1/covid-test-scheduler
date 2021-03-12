@@ -1,17 +1,22 @@
 *{
     box-sizing: border-box;
   }
+
+  .appointment-time{
+    border-bottom:solid ;
+    border-bottom-color black;
+    border-bottom-width: 1px;
+    height: 25px;
+  }
   
   .column {
     float: left;
     width: 33.33%;
-    padding: 10px;
-    height: 300px; /* Should be removed. Only for demonstration */
   }
   
-  /* Clear floats after the columns */
   .row:after {
     content: "";
     display: table;
     clear: both;
   }
+
