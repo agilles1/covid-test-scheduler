@@ -1,5 +1,7 @@
 class Patient {
     static all = []
+    static allUnassigned = []
+    
     constructor(id, firstName, lastName){
         this.id = id
         this.firstName = firstName

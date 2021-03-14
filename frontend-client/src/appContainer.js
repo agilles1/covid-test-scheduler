@@ -14,6 +14,16 @@ class AppContainer {
         .then(apt => this.renderTestTimes())
     }
 
+    getUnassignedPatients(){
+        fetch(`${this.url}/patients`)
+        .then(res => res.json())
+        .then(data => data.forEach(patient => {
+            const newPatient = new Patient(patient.id, patient.first_name, patient.last_name)
+            Patient.allUnassigned.push(newPatient)
+        }))
+        .then(patient => this.renderUnassignedPatients())
+    }
+
     renderTestTimes(){
         const col = document.getElementById('appointments')
             Appointment.all.forEach(apt => {
@@ -23,17 +33,17 @@ class AppContainer {
                 aptHeader.innerHTML = apt.time
                 col.appendChild(aptHeader)
                 // aptHeader.insertAdjacentElement("afterend", aptDiv)
-                this.insertScheduledPatientDiv(aptHeader, apt)
+                this.insertScheduledPatientUl(aptHeader, apt)
                 this.insertBlankDivs(apt)
             });   
     }
 
-    insertScheduledPatientDiv(aptHeader, apt){
+    insertScheduledPatientUl(aptHeader, apt){
         const timeSlot = document.createElement('ul')
         timeSlot.setAttribute("id", `${apt.id}`)
         apt.patients.forEach(patient => {
             const aptSpace = document.createElement('li')
-            aptSpace.setAttribute("id", `${patient.id}`)
+            aptSpace.setAttribute("id", `patient-${patient.id}`)
             aptSpace.setAttribute("draggable", "true")
             aptSpace.addEventListener("dragstart", evt => this.drag(evt))
             aptSpace.addEventListener("dragover", evt => this.allowDrop(evt))
@@ -49,7 +59,7 @@ class AppContainer {
     const timeSlot = document.getElementById(`${apt.id}`)
         for (let index = apt.patients.length; index < apt.maxTests; index++) {
             const aptSpace = document.createElement('li')
-            aptSpace.setAttribute("id", `${apt.id}`)
+            aptSpace.setAttribute("id", `empty-${index}`)
             aptSpace.setAttribute("class", "appointment-time")
             aptSpace.setAttribute("draggable", "true")
             aptSpace.addEventListener("dragstart", evt => this.drag(evt))
@@ -59,18 +69,30 @@ class AppContainer {
         }
     }
 
+    renderUnassignedPatients(){
+        const col = document.getElementById('patients')
+        const patientList = document.createElement("ul")
+            Patient.allUnassigned.forEach(patient => {
+                console.log(patient)
+                const p = document.createElement("li")
+                p.innerHTML = patient.fullName
+                patientList.appendChild(p)
+                console.log(p)           
+            })
+            col.appendChild(patientList)
+    }
+
     allowDrop(ev) {
         ev.preventDefault();
       }
       
     drag(ev) {
         ev.dataTransfer.setData("text", ev.target.id);
-      }
+    }
       
     drop(ev) {
         ev.preventDefault();
         const data = ev.dataTransfer.getData("text");
-        debugger
         ev.target.appendChild(document.getElementById(data));
       }
 
