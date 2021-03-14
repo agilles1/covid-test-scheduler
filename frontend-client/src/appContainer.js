@@ -5,7 +5,11 @@ class AppContainer {
         fetch(`${this.url}/test_times`)
         .then(res => res.json())
         .then(data => data.forEach(apt => {
-            new Appointment(apt.id, apt.time, apt.duration, apt.max_tests);
+            const appointment = new Appointment(apt.id, apt.time, apt.duration, apt.max_tests);
+                apt.patients.forEach(patient => {
+                    const newPatient = new Patient(patient.id, patient.first_name, patient.last_name)
+                    appointment.patients.push(newPatient)
+            });
         }))
         .then(apt => this.renderTestTimes())
     }
@@ -13,17 +17,27 @@ class AppContainer {
     renderTestTimes(){
         const col = document.getElementById('appointments')
             Appointment.all.forEach(apt => {
-                console.log(col)
-                const aptDiv = document.createElement('h4')
+                const aptDiv = document.createElement('p')
                 aptDiv.setAttribute("id", `${apt.id}`)
+                aptDiv.setAttribute("class", "appointment-time-header")
                 aptDiv.innerHTML = apt.time
                 col.appendChild(aptDiv)
-                this.insertBlankDivs(col, apt)
+                this.insertScheduledPatientDiv(col, apt)
             });   
     }
 
+    insertScheduledPatientDiv(aptDiv, apt){
+        apt.patients.forEach(patient => {
+            const aptSpace = document.createElement('div')
+            aptSpace.setAttribute("id", `${apt.id}`)
+            aptSpace.setAttribute("class", "appointment-time")
+            aptSpace.innerHTML = `${patient.fullName}`
+            aptDiv.appendChild(aptSpace)
+        });
+    }
+
     insertBlankDivs(aptDiv, apt){
-        for (let index = 0; index < apt.max_tests; index++) {
+        for (let index = 0; index < apt.maxTests; index++) {
             const aptSpace = document.createElement('div')
             aptSpace.setAttribute("id", `${apt.id}-${index}`)
             aptSpace.setAttribute("class", "appointment-time")

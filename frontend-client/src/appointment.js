@@ -1,15 +1,17 @@
 class Appointment {
     static all = []
-    static all_dates = []
+    static allDates = []
 
-    constructor(id, time, duration, max_tests){
+    constructor(id, time, duration, maxTests){
         this.id = id;
-        this.time = time;
+        this.date = time.substring(0, 10)
+        this.time = time.split("T")[1].substring(0,5)
         this.duration = duration;
-        this.max_tests = max_tests
+        this.maxTests = maxTests;
+        this.patients = []
         //Create array of all testing days 
-        if (Appointment.all_dates.includes(this.time.substring(0, 10)) == false){
-            Appointment.all_dates.push(this.time.substring(0, 10))
+        if (Appointment.allDates.includes(this.date) == false){
+            Appointment.allDates.push(this.date)
         }          
         //Create array of all testing appointments with times  
         Appointment.all.push(this)
