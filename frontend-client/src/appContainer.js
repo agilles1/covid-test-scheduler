@@ -23,6 +23,7 @@ class AppContainer {
                 aptDiv.innerHTML = apt.time
                 col.appendChild(aptDiv)
                 this.insertScheduledPatientDiv(col, apt)
+                this.insertBlankDivs(col, apt)
             });   
     }
 
@@ -31,15 +32,16 @@ class AppContainer {
             const aptSpace = document.createElement('div')
             aptSpace.setAttribute("id", `${apt.id}`)
             aptSpace.setAttribute("class", "appointment-time")
+            aptSpace.setAttribute("draggable", "true")
             aptSpace.innerHTML = `${patient.fullName}`
             aptDiv.appendChild(aptSpace)
         });
     }
 
     insertBlankDivs(aptDiv, apt){
-        for (let index = 0; index < apt.maxTests; index++) {
+        for (let index = apt.patients.length; index < apt.maxTests; index++) {
             const aptSpace = document.createElement('div')
-            aptSpace.setAttribute("id", `${apt.id}-${index}`)
+            aptSpace.setAttribute("id", `${apt.id}`)
             aptSpace.setAttribute("class", "appointment-time")
             aptSpace.innerHTML = "<br>"
             aptDiv.appendChild(aptSpace)
@@ -60,17 +62,4 @@ class AppContainer {
         ev.target.appendChild(document.getElementById(data));
       }
 
-
- 
-
-
-
-    // function createAppointments(data){
-    //     data.forEach(apt => {
-    //         console.log(apt)
-    //         appointment = new Appointment()
-            
-    //     });
-    // }
-
-}
+    }

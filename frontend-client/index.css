@@ -1,13 +1,13 @@
 *{
     box-sizing: border-box;
   }
-
+/* 
   .appointment-time{
     border-bottom:solid ;
     border-bottom-color black;
     border-bottom-width: 1px;
     height: 25px;
-  }
+  } */
   
   .column {
     float: left;
