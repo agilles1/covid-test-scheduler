@@ -42,14 +42,15 @@ class AppContainer {
         const timeSlot = document.createElement('ul')
         timeSlot.setAttribute("id", `${apt.id}`)
         apt.patients.forEach(patient => {
-            const aptSpace = document.createElement('li')
+            const aptSlot = document.createElement('li')
+            aptSlot.setAttribute("id", `patient-slot-${patient.id}`)
+            const aptSpace = document.createElement('div')
             aptSpace.setAttribute("id", `patient-${patient.id}`)
-            aptSpace.setAttribute("draggable", "true")
-            aptSpace.addEventListener("dragstart", evt => this.drag(evt))
-            aptSpace.addEventListener("dragover", evt => this.allowDrop(evt))
-            aptSpace.addEventListener("drop", evt => this.drop(evt))
+            this.bindDragDrop(aptSlot)
+            this.bindDragDrop(aptSpace)
             aptSpace.innerHTML = `${patient.fullName}`
-            timeSlot.appendChild(aptSpace)
+            aptSlot.appendChild(aptSpace)
+            timeSlot.appendChild(aptSlot)
         });
         aptHeader.insertAdjacentElement("afterend", timeSlot)
         
@@ -59,12 +60,10 @@ class AppContainer {
     const timeSlot = document.getElementById(`${apt.id}`)
         for (let index = apt.patients.length; index < apt.maxTests; index++) {
             const aptSpace = document.createElement('li')
-            aptSpace.setAttribute("id", `empty-${index}`)
+            aptSpace.setAttribute("id", `empty-${apt.id}-${index}`)
             aptSpace.setAttribute("class", "appointment-time")
             aptSpace.setAttribute("draggable", "true")
-            aptSpace.addEventListener("dragstart", evt => this.drag(evt))
-            aptSpace.addEventListener("dragover", evt => this.allowDrop(evt))
-            aptSpace.addEventListener("drop", evt => this.drop(evt))
+            this.bindDragDrop(aptSpace)
             timeSlot.appendChild(aptSpace)
         }
     }
@@ -74,10 +73,11 @@ class AppContainer {
         const patientList = document.createElement("ul")
             Patient.allUnassigned.forEach(patient => {
                 console.log(patient)
-                const p = document.createElement("li")
+                const p = document.createElement("div")
+                p.setAttribute("id", patient.id)
                 p.innerHTML = patient.fullName
                 patientList.appendChild(p)
-                console.log(p)           
+                this.bindDragDrop(p)       
             })
             col.appendChild(patientList)
     }
@@ -92,8 +92,17 @@ class AppContainer {
       
     drop(ev) {
         ev.preventDefault();
+        //If there is already a Patient assigned to this slot don't permit 
+        if (ev.target.innerHTML !=  "") {
+            return false;
+        } else {
         const data = ev.dataTransfer.getData("text");
-        ev.target.appendChild(document.getElementById(data));
+        ev.target.append(document.getElementById(data));}
       }
 
+    bindDragDrop(el){
+            el.setAttribute("draggable", "true")
+            el.addEventListener("dragstart", evt => this.drag(evt))
+            el.addEventListener("dragover", evt => this.allowDrop(evt))
+            el.addEventListener("drop", evt => this.drop(evt))}
     }
