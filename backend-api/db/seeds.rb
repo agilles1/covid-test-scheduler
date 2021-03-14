@@ -35,3 +35,8 @@ Patient.all.each do |p|
     apt.test_time =  TestTime.all.sample()
     apt.save
 end
+
+15.times {
+    p = Patient.new(first_name: Faker::Name.first_name, last_name: Faker::Name.last_name, email: Faker::Internet.email, job_title: Faker::Job.title)
+    p.save
+}

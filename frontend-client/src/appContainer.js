@@ -33,8 +33,7 @@ class AppContainer {
         timeSlot.setAttribute("id", `${apt.id}`)
         apt.patients.forEach(patient => {
             const aptSpace = document.createElement('li')
-            aptSpace.setAttribute("id", `${apt.id}-${patient.id}`)
-            aptSpace.setAttribute("class", "appointment-time")
+            aptSpace.setAttribute("id", `${patient.id}`)
             aptSpace.setAttribute("draggable", "true")
             aptSpace.addEventListener("dragstart", evt => this.drag(evt))
             aptSpace.addEventListener("dragover", evt => this.allowDrop(evt))
