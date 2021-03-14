@@ -32,6 +32,7 @@ end
 
 Patient.all.each do |p|
     apt = p.appointments.build
+    apt.location = "Heinz Hall Lobby"
     apt.test_time =  TestTime.all.sample()
     apt.save
 end
