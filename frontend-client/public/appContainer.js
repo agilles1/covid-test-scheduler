@@ -5,13 +5,15 @@ class AppContainer {
         fetch(`${this.url}/test_times`)
         .then(res => res.json())
         .then(data => data.forEach(apt => {
-            const appointment = new Appointment(apt.id, apt.time, apt.duration, apt.max_tests);
+            const appointment = new Appointment(apt.id, apt.time, apt.duration, apt.max_tests, apt.location);
                 apt.patients.forEach(patient => {
                     const newPatient = new Patient(patient.id, patient.first_name, patient.last_name)
                     appointment.patients.push(newPatient)
             });
         }))
-        .then(apt => this.renderTestTimes())
+        .then(apt => {
+            this.renderTestTimes()
+            this.renderAppointmentInfo()})
     }
 
     getUnassignedPatients(){
@@ -35,6 +37,21 @@ class AppContainer {
                 this.insertScheduledPatientUl(aptHeader, apt)
                 this.insertBlankDivs(apt)
             });   
+    }
+
+    renderAppointmentInfo(){
+        const col = document.getElementById('appointment-info')
+        const info = document.createElement("div")
+        const appointmentSelect = document.createElement("SELECT")
+        Appointment.allDates.forEach(date => {
+            console.log(date)
+            const option = document.createElement("option")
+            option.value = date
+            option.text = date
+            appointmentSelect.appendChild(option)
+        });
+        info.appendChild(appointmentSelect)
+        col.appendChild(info)
     }
 
     insertScheduledPatientUl(aptHeader, apt){
