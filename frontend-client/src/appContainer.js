@@ -17,34 +17,46 @@ class AppContainer {
     renderTestTimes(){
         const col = document.getElementById('appointments')
             Appointment.all.forEach(apt => {
-                const aptDiv = document.createElement('p')
-                aptDiv.setAttribute("id", `${apt.id}`)
-                aptDiv.setAttribute("class", "appointment-time-header")
-                aptDiv.innerHTML = apt.time
-                col.appendChild(aptDiv)
-                this.insertScheduledPatientDiv(col, apt)
-                this.insertBlankDivs(col, apt)
+                const aptHeader = document.createElement('h3')
+                aptHeader.setAttribute("id", `header-${apt.id}`)
+                aptHeader.setAttribute("class", "appointment-time-header")
+                aptHeader.innerHTML = apt.time
+                col.appendChild(aptHeader)
+                // aptHeader.insertAdjacentElement("afterend", aptDiv)
+                this.insertScheduledPatientDiv(aptHeader, apt)
+                this.insertBlankDivs(apt)
             });   
     }
 
-    insertScheduledPatientDiv(aptDiv, apt){
+    insertScheduledPatientDiv(aptHeader, apt){
+        const timeSlot = document.createElement('ul')
+        timeSlot.setAttribute("id", `${apt.id}`)
         apt.patients.forEach(patient => {
-            const aptSpace = document.createElement('div')
+            const aptSpace = document.createElement('li')
+            aptSpace.setAttribute("id", `${apt.id}-${patient.id}`)
+            aptSpace.setAttribute("class", "appointment-time")
+            aptSpace.setAttribute("draggable", "true")
+            aptSpace.addEventListener("dragstart", evt => this.drag(evt))
+            aptSpace.addEventListener("dragover", evt => this.allowDrop(evt))
+            aptSpace.addEventListener("drop", evt => this.drop(evt))
+            aptSpace.innerHTML = `${patient.fullName}`
+            timeSlot.appendChild(aptSpace)
+        });
+        aptHeader.insertAdjacentElement("afterend", timeSlot)
+        
+    }
+
+    insertBlankDivs(apt){
+    const timeSlot = document.getElementById(`${apt.id}`)
+        for (let index = apt.patients.length; index < apt.maxTests; index++) {
+            const aptSpace = document.createElement('li')
             aptSpace.setAttribute("id", `${apt.id}`)
             aptSpace.setAttribute("class", "appointment-time")
             aptSpace.setAttribute("draggable", "true")
-            aptSpace.innerHTML = `${patient.fullName}`
-            aptDiv.appendChild(aptSpace)
-        });
-    }
-
-    insertBlankDivs(aptDiv, apt){
-        for (let index = apt.patients.length; index < apt.maxTests; index++) {
-            const aptSpace = document.createElement('div')
-            aptSpace.setAttribute("id", `${apt.id}`)
-            aptSpace.setAttribute("class", "appointment-time")
-            aptSpace.innerHTML = "<br>"
-            aptDiv.appendChild(aptSpace)
+            aptSpace.addEventListener("dragstart", evt => this.drag(evt))
+            aptSpace.addEventListener("dragover", evt => this.allowDrop(evt))
+            aptSpace.addEventListener("drop", evt => this.drop(evt))
+            timeSlot.appendChild(aptSpace)
         }
     }
 
@@ -59,6 +71,7 @@ class AppContainer {
     drop(ev) {
         ev.preventDefault();
         const data = ev.dataTransfer.getData("text");
+        debugger
         ev.target.appendChild(document.getElementById(data));
       }
 
