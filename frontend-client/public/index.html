@@ -11,18 +11,18 @@
 <body>
     <div id = "main">
         <div class="lg:text-center">
-            <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Testy</h2>
+            <h2 class="text-base text-blue-600 font-semibold tracking-wide uppercase">Testify</h2>
             <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
               COVID-19 Test Scheduler
             </p>
         </div>
-        <div class="py-12 bg-white">
+        <div class="py-5 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div class="mt-10">
                 <dl class="space-y-10 md:space-y-0 md:grid md:grid-cols-3 md:gap-x-8 md:gap-y-10">
                   <div class="relative">
                     <dt>
-                      <div class="absolute flex items-center justify-center h-10 w-10 rounded-md bg-indigo-500 text-white">
+                      <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
                         <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
                         </svg>
@@ -35,7 +35,7 @@
           
                   <div class="relative">
                     <dt>
-                      <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                      <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
                         <!-- Heroicon name: outline/globe-alt -->
                         <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
@@ -44,12 +44,15 @@
                       <div id= "appointments" class="ml-16 text-lg leading-6 font-medium text-gray-900">
                         <h2 class="text-xl font-bold">Times</h2>
                     </div>
+                    <button id="save-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Save
+                      </button>
                     </dt>
                   </div>
 
                   <div class="relative">
                     <dt>
-                      <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                      <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
                         <!-- Heroicon name: outline/globe-alt -->
                         <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
@@ -57,6 +60,7 @@
                       </div>
                       <div id= "appointment-info" class="ml-16 text-lg leading-6 font-medium text-gray-900">
                         <h2 class="text-xl font-bold">Appointment Info</h2>
+                        <p>SELECT DATE:</p>
                     </div>
                     </dt>
                   </div>
