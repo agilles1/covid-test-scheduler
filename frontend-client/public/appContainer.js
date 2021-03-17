@@ -19,7 +19,20 @@ class AppContainer {
     }
 
     postTestTimes(){
-        fetch()
+        const appointmentObj = {}
+
+        for (item of col.children) { 
+            if (!item.id.includes("header")){
+                console.log(item)
+            }}
+
+        fetch(`${this.url}/appointments`, {
+            method: 'POST',
+            headers: 'content-type': 'application/json',
+            body: {
+                
+  }
+})
     }
 
     getUnassignedPatients(){
