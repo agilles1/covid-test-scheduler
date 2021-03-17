@@ -14,8 +14,12 @@ class AppContainer {
         .then(apt => {
             this.renderAppointmentInfo()
             this.bindSelector()
-            // this.renderTestTimes()
+            this.renderTestTimes(document.getElementById("date-select").value)
             })
+    }
+
+    postTestTimes(){
+        fetch()
     }
 
     getUnassignedPatients(){
@@ -27,7 +31,6 @@ class AppContainer {
         }))
         .then(patient => this.renderUnassignedPatients())
     }
-
 
     renderTestTimes(date){
         const col = document.getElementById('appointments')
