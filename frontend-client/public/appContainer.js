@@ -12,8 +12,10 @@ class AppContainer {
             });
         }))
         .then(apt => {
-            this.renderTestTimes()
-            this.renderAppointmentInfo()})
+            this.renderAppointmentInfo()
+            this.bindSelector()
+            // this.renderTestTimes()
+            })
     }
 
     getUnassignedPatients(){
@@ -26,9 +28,11 @@ class AppContainer {
         .then(patient => this.renderUnassignedPatients())
     }
 
-    renderTestTimes(){
+
+    renderTestTimes(date){
         const col = document.getElementById('appointments')
-            Appointment.all.forEach(apt => {
+        col.innerHTML =""
+            Appointment.all.filter(apt => apt.date == date).forEach(apt => {
                 const aptHeader = document.createElement('h3')
                 aptHeader.setAttribute("id", `header-${apt.id}`)
                 aptHeader.setAttribute("class", "font-semibold")
@@ -36,15 +40,15 @@ class AppContainer {
                 col.appendChild(aptHeader)
                 this.insertScheduledPatientUl(aptHeader, apt)
                 this.insertBlankDivs(apt)
-            });   
+            });
     }
 
     renderAppointmentInfo(){
         const col = document.getElementById('appointment-info')
         const info = document.createElement("div")
         const appointmentSelect = document.createElement("SELECT")
+        appointmentSelect.setAttribute("id", "date-select")
         Appointment.allDates.forEach(date => {
-            console.log(date)
             const option = document.createElement("option")
             option.value = date
             option.text = date
@@ -142,5 +146,15 @@ class AppContainer {
             el.setAttribute("draggable", "true")
             el.addEventListener("dragstart", evt => this.drag(evt))
             el.addEventListener("dragover", evt => this.allowDrop(evt))
-            el.addEventListener("drop", evt => this.drop(evt))}
+            el.addEventListener("drop", evt => this.drop(evt))
+        }
+    
+    bindSelector(){
+        const dateSelector = document.getElementById("date-select")
+        console.log(dateSelector)
+        dateSelector.addEventListener("change", (event) => {
+            const date = event.target.value
+            this.renderTestTimes(date)
+        })
+    }
     }

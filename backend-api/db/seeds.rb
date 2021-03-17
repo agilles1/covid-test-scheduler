@@ -25,8 +25,13 @@ Appointment.reset_pk_sequence
 t = [0, 15, 30, 45]
 
 t.each do |min|
-    t = TestTime.create(time: DateTime.new(2021, 3, 5, 9, min), duration: 15, max_tests: 8) 
-    t.save
+    time = TestTime.create(time: DateTime.new(2021, 3, 5, 9, min), duration: 15, max_tests: 8) 
+    time.save
+end
+
+t.each do |min|
+    time = TestTime.create(time: DateTime.new(2021, 3, 6, 9, min), duration: 15, max_tests: 8) 
+    time.save
 end
 
 

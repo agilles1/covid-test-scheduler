@@ -18,9 +18,4 @@ class Appointment {
         Appointment.all.push(this)
     }
 
-    
-
-
-
-
 }
