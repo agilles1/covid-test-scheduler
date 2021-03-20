@@ -28,6 +28,28 @@ class AppContainer {
         .then(patient => this.renderUnassignedPatients())
     }
 
+    postNewAppointment(event){
+        const myForm = event.target.form
+        debugger
+        fetch(`${this.url}/appointments`, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                date: myForm.test_date.value,
+                start: myForm.start_time.value, 
+                end: myForm.end_time.value,
+                max_tests: myForm.test_per_apt.value
+            })
+        })
+        .then(resp => resp.json())
+        .then(data => console.log(data))
+    }
+
+
+//move to Appointments?
     renderTestTimes(date){
         const col = document.getElementById('appointments')
         col.innerHTML =""
@@ -41,7 +63,7 @@ class AppContainer {
                 this.insertBlankDivs(apt)
             });
     }
-
+//move to Appointment?
     renderAppointmentInfo(){
         const col = document.getElementById('appointment-info')
         const info = document.createElement("div")
@@ -89,6 +111,7 @@ class AppContainer {
         }
     }
 
+    //Move to Patient?
     renderUnassignedPatients(){
         const col = document.getElementById('patients')
         col.innerHTML = ""
@@ -154,12 +177,14 @@ class AppContainer {
         const dateSelector = document.getElementById("date-select")
         dateSelector.addEventListener("change", (event) => {
             this.saveAppointmentsWithPatients()
+            this.saveUnassignedPatients()
             const date = event.target.value
             this.renderTestTimes(date)
             this.renderUnassignedPatients()
         })
     }
 
+//Move to Appointment?
     saveAppointmentsWithPatients(){
         const schedule = document.getElementById("appointments")
    
@@ -171,15 +196,30 @@ class AppContainer {
                     for (const e of p.children){
                         if (Patient.all.find(pt => pt.id === parseInt(e.dataset.patientId))){
                             aptObj.patients.push(Patient.all.find(pt => pt.id === parseInt(p.children[0].dataset.patientId)))
-                            if (Patient.allUnassigned.findIndex(pat => pat.id === parseInt(p.children[0].dataset.patientId)) >= 0){
-                                Patient.allUnassigned.splice(Patient.allUnassigned.findIndex(pat => pat.id === parseInt(p.children[0].dataset.patientId),1), 1)
-                            }
+                            // if (Patient.allUnassigned.findIndex(pat => pat.id === parseInt(p.children[0].dataset.patientId)) >= 0){
+                            //     Patient.allUnassigned.splice(Patient.allUnassigned.findIndex(pat => pat.id === parseInt(p.children[0].dataset.patientId),1), 1)
+                            // }
                         }
                     }
                 }
                 
             } 
         }
+    }
+//Move to Patient?
+    saveUnassignedPatients(){
+        const unassignedPatientList = document.getElementById("patients")
+        Patient.allUnassigned = []
+
+        for (const patient of unassignedPatientList.children){
+            for (const child of patient.children){
+                for (const p of child.children){
+                    const patientObj = Patient.all.find(pt => pt.id === parseInt(p.dataset.patientId))
+                    Patient.allUnassigned.push(patientObj)
+                }
+            }
+        }
+
     }
 
 }

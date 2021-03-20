@@ -3,7 +3,7 @@ const saveButton = document.getElementById("create-new-apt-btn")
 
 app.getTestTimes()
 app.getUnassignedPatients()
-saveButton.addEventListener("click", function(event){Appointment.createNewAppointment(event)})
+saveButton.addEventListener("click", (event) => app.postNewAppointment(event))
 
 
 const openmodal = document.querySelectorAll('.modal-open')
