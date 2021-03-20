@@ -1,26 +1,43 @@
 const app = new AppContainer
-const saveButton = document.getElementById("save-btn")
+const saveButton = document.getElementById("create-new-apt-btn")
 
 app.getTestTimes()
 app.getUnassignedPatients()
-// saveButton.addEventListener("click", function() {
-//     const schedule = document.getElementById("appointments")
+saveButton.addEventListener("click", function(event){Appointment.createNewAppointment(event)})
+
+
+const openmodal = document.querySelectorAll('.modal-open')
+const overlay = document.querySelector('.modal-overlay')
+const closemodal = document.querySelectorAll('.modal-close')
+
+for (let i = 0; i < openmodal.length; i++) {
+      openmodal[i].addEventListener('click', function(event){
+    	toggleModal()
+      })
+}
+overlay.addEventListener('click', toggleModal)
+for (let i = 0; i < closemodal.length; i++) {
+      closemodal[i].addEventListener('click', toggleModal)
+    }
     
-//     for (item of schedule.children) { 
-//         if (!item.id.includes("header")) {
-//             const aptObj = Appointment.all.find(apt => apt.id === parseInt(item.id))
-//             aptObj.patients = []
-//             for (p of item.children){
-//                 for (e of p.children){
-//                     if (Patient.all.find(pt => pt.id === parseInt(e.dataset.patientId))){
-//                         aptObj.patients.push(Patient.all.find(pt => pt.id === parseInt(p.children[0].dataset.patientId)))
-//                         if (Patient.allUnassigned.findIndex(pat => pat.id === parseInt(p.children[0].dataset.patientId)) >= 0){
-//                             Patient.allUnassigned.splice(Patient.allUnassigned.findIndex(pat => pat.id === parseInt(p.children[0].dataset.patientId),1), 1)
-//                         }
-//                     }
-//                 }
-//             }
-            
-//         } 
-//     }
-// })
+    document.onkeydown = function(evt) {
+      evt = evt || window.event
+      let isEscape = false
+      if ("key" in evt) {
+    	isEscape = (evt.key === "Escape" || evt.key === "Esc")
+      } else {
+    	isEscape = (evt.keyCode === 27)
+      }
+      if (isEscape && document.body.classList.contains('modal-active')) {
+    	toggleModal()
+      }
+    };
+    
+    
+    function toggleModal () {
+      const body = document.querySelector('body')
+      const modal = document.querySelector('.modal')
+      modal.classList.toggle('opacity-0')
+      modal.classList.toggle('pointer-events-none')
+      body.classList.toggle('modal-active')
+    }
