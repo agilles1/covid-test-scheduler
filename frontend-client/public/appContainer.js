@@ -16,24 +16,7 @@ class AppContainer {
             this.bindSelector()
             this.renderTestTimes(document.getElementById("date-select").value)
             })
-    }
-
-//     postTestTimes(){
-//         const appointmentObj = {}
-
-//         for (item of col.children) { 
-//             if (!item.id.includes("header")){
-//                 console.log(item)
-//             }}
-
-//         fetch(`${this.url}/appointments`, {
-//             method: 'POST',
-//             headers: 'content-type': 'application/json',
-//             body: {
-                
-//   }
-// })
-//     }
+        }
 
     getUnassignedPatients(){
         fetch(`${this.url}/patients`)

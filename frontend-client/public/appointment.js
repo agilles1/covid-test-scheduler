@@ -18,4 +18,25 @@ class Appointment {
         Appointment.all.push(this)
     }
 
+    static createNewAppointment(event){
+        debugger
+        event.preventDefault()
+        const myForm = event.target.form
+        fetch(`${this.url}/appointments`, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                date: myForm.test_date.value,
+                start: myForm.start_time.value, 
+                end: myForm.end_time.value,
+                max_tests: myForm.test_per_apt.value
+            })
+        })
+        .then(resp => resp.json())
+        .then(data => console.log(data))
+    }
+
 }
