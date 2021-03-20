@@ -18,22 +18,22 @@ class AppContainer {
             })
     }
 
-    postTestTimes(){
-        const appointmentObj = {}
+//     postTestTimes(){
+//         const appointmentObj = {}
 
-        for (item of col.children) { 
-            if (!item.id.includes("header")){
-                console.log(item)
-            }}
+//         for (item of col.children) { 
+//             if (!item.id.includes("header")){
+//                 console.log(item)
+//             }}
 
-        fetch(`${this.url}/appointments`, {
-            method: 'POST',
-            headers: 'content-type': 'application/json',
-            body: {
+//         fetch(`${this.url}/appointments`, {
+//             method: 'POST',
+//             headers: 'content-type': 'application/json',
+//             body: {
                 
-  }
-})
-    }
+//   }
+// })
+//     }
 
     getUnassignedPatients(){
         fetch(`${this.url}/patients`)
@@ -79,10 +79,9 @@ class AppContainer {
         timeSlot.setAttribute("id", `${apt.id}`)
         apt.patients.forEach(patient => {
             const aptSlot = document.createElement('li')
-            aptSlot.setAttribute("id", `patient-slot-${patient.id}`)
+            // aptSlot.setAttribute("id", `patient-slot-${patient.id}`)
             const aptPatient = document.createElement('div')
-            aptPatient.setAttribute("class", "border-solid")
-            aptPatient.setAttribute("id", `patient-${patient.id}`)
+            aptPatient.dataset.patientId = patient.id
             this.bindDragDrop(aptSlot)
             this.bindDragDrop(aptPatient)
             aptPatient.innerHTML = `${patient.fullName}`
@@ -113,6 +112,7 @@ class AppContainer {
                 const patientSlot = document.createElement("li")
                 patientSlot.setAttribute("id", `unassigned-${patient.id}`)
                 const p = document.createElement("div")
+                p.dataset.patientId = patient.id
                 p.setAttribute("id", patient.id)
                 p.innerHTML = patient.fullName
                 patientSlot.appendChild(p)
@@ -167,7 +167,6 @@ class AppContainer {
     
     bindSelector(){
         const dateSelector = document.getElementById("date-select")
-        console.log(dateSelector)
         dateSelector.addEventListener("change", (event) => {
             const date = event.target.value
             this.renderTestTimes(date)
