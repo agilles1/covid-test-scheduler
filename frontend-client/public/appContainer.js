@@ -79,9 +79,10 @@ class AppContainer {
         timeSlot.setAttribute("id", `${apt.id}`)
         apt.patients.forEach(patient => {
             const aptSlot = document.createElement('li')
-            // aptSlot.setAttribute("id", `patient-slot-${patient.id}`)
+            aptSlot.setAttribute("id", `patient-slot-${patient.id}`)
             const aptPatient = document.createElement('div')
             aptPatient.dataset.patientId = patient.id
+            aptPatient.setAttribute("id", `patient-${patient.id}`)
             this.bindDragDrop(aptSlot)
             this.bindDragDrop(aptPatient)
             aptPatient.innerHTML = `${patient.fullName}`
@@ -107,6 +108,7 @@ class AppContainer {
 
     renderUnassignedPatients(){
         const col = document.getElementById('patients')
+        col.innerHTML = ""
         const patientList = document.createElement("ul")
             Patient.allUnassigned.forEach(patient => {
                 const patientSlot = document.createElement("li")
@@ -168,8 +170,33 @@ class AppContainer {
     bindSelector(){
         const dateSelector = document.getElementById("date-select")
         dateSelector.addEventListener("change", (event) => {
+            this.saveAppointmentsWithPatients()
             const date = event.target.value
             this.renderTestTimes(date)
+            this.renderUnassignedPatients()
         })
     }
+
+    saveAppointmentsWithPatients(){
+        const schedule = document.getElementById("appointments")
+   
+        for (const item of schedule.children) { 
+            if (!item.id.includes("header")) {
+                const aptObj = Appointment.all.find(apt => apt.id === parseInt(item.id))
+                aptObj.patients = []
+                for (const p of item.children){
+                    for (const e of p.children){
+                        if (Patient.all.find(pt => pt.id === parseInt(e.dataset.patientId))){
+                            aptObj.patients.push(Patient.all.find(pt => pt.id === parseInt(p.children[0].dataset.patientId)))
+                            if (Patient.allUnassigned.findIndex(pat => pat.id === parseInt(p.children[0].dataset.patientId)) >= 0){
+                                Patient.allUnassigned.splice(Patient.allUnassigned.findIndex(pat => pat.id === parseInt(p.children[0].dataset.patientId),1), 1)
+                            }
+                        }
+                    }
+                }
+                
+            } 
+        }
     }
+
+}
