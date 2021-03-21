@@ -82,7 +82,7 @@ class AppContainer {
         const info = document.createElement("div")
         const appointmentSelect = document.createElement("SELECT")
         appointmentSelect.setAttribute("id", "date-select")
-        Appointment.allDates.forEach(date => {
+        Appointment.allDates.sort().forEach(date => {
             const option = document.createElement("option")
             option.value = date
             option.text = date
