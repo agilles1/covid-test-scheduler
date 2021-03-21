@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  resources :appointments, only: [:index, :create]
-  resources :test_times, only: [:index]
+  resources :appointments, only: [:index]
+  resources :test_times, only: [:index, :create]
   resources :patients, only: [:index]
 end

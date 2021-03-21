@@ -6,8 +6,6 @@ class AppointmentsController < ApplicationController
         render json: appointments
     end
 
-    def create
-        binding.pry
-    end
+    
 
 end
