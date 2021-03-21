@@ -25,27 +25,40 @@ class AppContainer {
             const newPatient = new Patient(patient.id, patient.first_name, patient.last_name)
             Patient.allUnassigned.push(newPatient)
         }))
+        
         .then(patient => this.renderUnassignedPatients())
     }
 
     postNewAppointment(event){
         const myForm = event.target.form
-        debugger
-        fetch(`${this.url}/appointments`, {
+       
+        fetch(`${this.url}/test_times`, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
                 'Accept': 'application/json'
             },
-            body: JSON.stringify({
+            body: JSON.stringify(
+                {appointment: {
                 date: myForm.test_date.value,
                 start: myForm.start_time.value, 
                 end: myForm.end_time.value,
                 max_tests: myForm.test_per_apt.value
-            })
+            }})
         })
         .then(resp => resp.json())
-        .then(data => console.log(data))
+        .then(data => data.forEach(apt => {
+            const appointment = new Appointment(apt.id, apt.time, apt.duration, apt.max_tests, apt.location);
+                apt.patients.forEach(patient => {
+                    const newPatient = new Patient(patient.id, patient.first_name, patient.last_name)
+                    appointment.patients.push(newPatient)
+            });
+        }))
+        .then(apt => {
+            this.renderAppointmentInfo()
+            this.bindSelector()
+            this.renderTestTimes(document.getElementById("date-select").value)
+            })
     }
 
 
@@ -121,7 +134,7 @@ class AppContainer {
                 patientSlot.setAttribute("id", `unassigned-${patient.id}`)
                 const p = document.createElement("div")
                 p.dataset.patientId = patient.id
-                p.setAttribute("id", patient.id)
+                p.setAttribute("id", `patient-id-${patient.id}`)
                 p.innerHTML = patient.fullName
                 patientSlot.appendChild(p)
                 patientList.appendChild(patientSlot)
@@ -214,8 +227,9 @@ class AppContainer {
         for (const patient of unassignedPatientList.children){
             for (const child of patient.children){
                 for (const p of child.children){
+                    if (Patient.all.find(pt => pt.id === parseInt(p.dataset.patientId))){
                     const patientObj = Patient.all.find(pt => pt.id === parseInt(p.dataset.patientId))
-                    Patient.allUnassigned.push(patientObj)
+                    Patient.allUnassigned.push(patientObj)}
                 }
             }
         }
