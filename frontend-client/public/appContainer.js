@@ -31,34 +31,47 @@ class AppContainer {
 
     postNewAppointment(event){
         const myForm = event.target.form
-       
-        fetch(`${this.url}/test_times`, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(
-                {appointment: {
-                date: myForm.test_date.value,
-                start: myForm.start_time.value, 
-                end: myForm.end_time.value,
-                max_tests: myForm.test_per_apt.value
-            }})
-        })
-        .then(resp => resp.json())
-        .then(data => data.forEach(apt => {
-            const appointment = new Appointment(apt.id, apt.time, apt.duration, apt.max_tests, apt.location);
-                apt.patients.forEach(patient => {
-                    const newPatient = new Patient(patient.id, patient.first_name, patient.last_name)
-                    appointment.patients.push(newPatient)
-            });
-        }))
-        .then(apt => {
-            this.renderAppointmentInfo()
-            this.bindSelector()
-            this.renderTestTimes(document.getElementById("date-select").value)
+        event.preventDefault()
+        if (this.checkForm(myForm)) {
+            fetch(`${this.url}/test_times`, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(
+                    {appointment: {
+                    date: myForm.test_date.value,
+                    start: myForm.start_time.value, 
+                    end: myForm.end_time.value,
+                    max_tests: myForm.test_per_apt.value
+                }})
             })
+            .then(resp => resp.json())
+            .then(data => data.forEach(apt => {
+                const appointment = new Appointment(apt.id, apt.time, apt.duration, apt.max_tests, apt.location);
+                    apt.patients.forEach(patient => {
+                        const newPatient = new Patient(patient.id, patient.first_name, patient.last_name)
+                        appointment.patients.push(newPatient)
+                });
+            }))
+            .then(apt => {
+                this.renderAppointmentInfo()
+                this.bindSelector()
+                this.renderTestTimes(document.getElementById("date-select").value)
+                })
+        } else {  
+            alert("One or more fields are empty! Please try again.")   
+        }
+    }
+
+    checkForm(form){
+        if(form.test_date.value == "" || form.start_time.value == "" || form.end_time.value == "" || form.test_per_apt.value == "" ){
+            return false
+        } else {
+            return true
+        }
+
     }
 
 
