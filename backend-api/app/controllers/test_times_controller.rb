@@ -7,13 +7,9 @@ class TestTimesController < ApplicationController
     end
 
     def create
-        if test_time = TestTime.create_from_params(test_time_params)
-            test_times = TestTime.all
-            render json: test_times
-        else
-            render json: { :errors => test_time.errors.full_messages }
-        end
-
+        TestTime.create_from_params(test_time_params)
+        test_times = TestTime.all
+        render json: test_times
     end
 
     private
