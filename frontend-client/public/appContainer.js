@@ -56,6 +56,8 @@ class AppContainer {
                 });
             }))
             .then(apt => {
+                const select = document.getElementById('selector-div')
+                select.innerHTML=""
                 this.renderAppointmentInfo()
                 this.bindSelector()
                 this.renderTestTimes(document.getElementById("date-select").value)
@@ -71,7 +73,6 @@ class AppContainer {
         } else {
             return true
         }
-
     }
 
 
@@ -93,6 +94,7 @@ class AppContainer {
     renderAppointmentInfo(){
         const col = document.getElementById('appointment-info')
         const info = document.createElement("div")
+        info.setAttribute("id", "selector-div")
         const appointmentSelect = document.createElement("SELECT")
         appointmentSelect.setAttribute("id", "date-select")
         Appointment.allDates.sort().forEach(date => {
