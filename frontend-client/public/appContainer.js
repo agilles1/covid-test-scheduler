@@ -21,12 +21,14 @@ class AppContainer {
     getUnassignedPatients(){
         fetch(`${this.url}/patients`)
         .then(res => res.json())
-        .then(data => data.forEach(patient => {
+        .then(Patient.allUnassigned = [])
+        .then(data => 
+            data.forEach(patient => {
             const newPatient = new Patient(patient.id, patient.first_name, patient.last_name)
             Patient.allUnassigned.push(newPatient)
         }))
-        
-        .then(patient => this.renderUnassignedPatients())
+        .then(patient => 
+            this.renderUnassignedPatients())
     }
 
     postNewAppointment(event){
@@ -48,19 +50,23 @@ class AppContainer {
                 }})
             })
             .then(resp => resp.json())
-            .then(data => data.forEach(apt => {
+            .then(
+                Appointment.all = [],
+                Appointment.allDates = [],
+                Patient.all = [])
+            .then(data => 
+                data.forEach(apt => {
                 const appointment = new Appointment(apt.id, apt.time, apt.duration, apt.max_tests, apt.location);
                     apt.patients.forEach(patient => {
                         const newPatient = new Patient(patient.id, patient.first_name, patient.last_name)
                         appointment.patients.push(newPatient)
-                });
+                })
             }))
             .then(apt => {
-                const select = document.getElementById('selector-div')
-                select.innerHTML=""
-                this.renderAppointmentInfo()
+                this.getUnassignedPatients()
+                this.updateAppointmentInfo()
                 this.bindSelector()
-                this.renderTestTimes(document.getElementById("date-select").value)
+                this.updateTestTimes(document.getElementById("date-select").value)
                 })
         } else {  
             alert("One or more fields are empty! Please try again.")   
@@ -73,6 +79,7 @@ class AppContainer {
         } else {
             return true
         }
+
     }
 
 
@@ -105,6 +112,35 @@ class AppContainer {
         });
         info.appendChild(appointmentSelect)
         col.appendChild(info)
+    }
+
+    updateAppointmentInfo(){
+        const col = document.getElementById('appointment-info')
+        const info = document.getElementById('selector-div')
+        const appointmentSelect = document.getElementById("date-select")
+        appointmentSelect.innerHTML=""
+        Appointment.allDates.sort().forEach(date => {
+            const option = document.createElement("option")
+            option.value = date
+            option.text = date
+            appointmentSelect.appendChild(option)
+        });
+        info.appendChild(appointmentSelect)
+        col.appendChild(info)
+    }
+
+    updateTestTimes(date){
+        const col = document.getElementById('appointments')
+            col.innerHTML =""
+            Appointment.all.filter(apt => apt.date == date).forEach(apt => {
+                const aptHeader = document.createElement('h3')
+                aptHeader.setAttribute("id", `header-${apt.id}`)
+                aptHeader.setAttribute("class", "font-semibold")
+                aptHeader.innerHTML = apt.time
+                col.appendChild(aptHeader)
+                this.insertScheduledPatientUl(aptHeader, apt)
+                this.insertBlankDivs(apt)
+            });
     }
 
     insertScheduledPatientUl(aptHeader, apt){
@@ -212,7 +248,7 @@ class AppContainer {
             this.saveAppointmentsWithPatients()
             this.saveUnassignedPatients()
             const date = event.target.value
-            this.renderTestTimes(date)
+            this.updateTestTimes(date)
             this.renderUnassignedPatients()
         })
     }
@@ -229,9 +265,6 @@ class AppContainer {
                     for (const e of p.children){
                         if (Patient.all.find(pt => pt.id === parseInt(e.dataset.patientId))){
                             aptObj.patients.push(Patient.all.find(pt => pt.id === parseInt(p.children[0].dataset.patientId)))
-                            // if (Patient.allUnassigned.findIndex(pat => pat.id === parseInt(p.children[0].dataset.patientId)) >= 0){
-                            //     Patient.allUnassigned.splice(Patient.allUnassigned.findIndex(pat => pat.id === parseInt(p.children[0].dataset.patientId),1), 1)
-                            // }
                         }
                     }
                 }
@@ -248,7 +281,7 @@ class AppContainer {
             for (const child of patient.children){
                 for (const p of child.children){
                     if (Patient.all.find(pt => pt.id === parseInt(p.dataset.patientId))){
-                    const patientObj = Patient.all.find(pt => pt.id === parseInt(p.dataset.patientId))
+                        const patientObj = Patient.all.find(pt => pt.id === parseInt(p.dataset.patientId))
                     Patient.allUnassigned.push(patientObj)}
                 }
             }
