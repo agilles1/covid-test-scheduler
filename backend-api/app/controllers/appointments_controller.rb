@@ -6,6 +6,4 @@ class AppointmentsController < ApplicationController
         render json: appointments
     end
 
-    
-
 end
