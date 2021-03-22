@@ -157,6 +157,11 @@ class AppContainer {
             })
             this.bindDragDrop(patientList)
             col.appendChild(patientList)
+            const blankSlot = document.createElement("li")
+            blankSlot.setAttribute("id", 'blank-patient')
+            blankSlot.innerHTML="<br>"
+            this.bindDragDrop(blankSlot)
+            patientList.appendChild(blankSlot)
     }
 
     allowDrop(ev) {
