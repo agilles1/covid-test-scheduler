@@ -26,6 +26,38 @@ class AppContainer {
             this.renderUnassignedPatients())
     }
 
+    insertScheduledPatientUl(aptHeader, apt){
+        const timeSlot = document.createElement('ul')
+        timeSlot.setAttribute("id", `${apt.id}`)
+        apt.patients.forEach(patient => {
+            const aptSlot = document.createElement('li')
+            aptSlot.setAttribute("id", `patient-slot-${patient.id}`)
+            const aptPatient = document.createElement('div')
+            aptPatient.dataset.patientId = patient.id
+            aptPatient.setAttribute("id", `patient-${patient.id}`)
+            this.bindDragDrop(aptSlot)
+            this.bindDragDrop(aptPatient)
+            aptPatient.innerHTML = `${patient.fullName}`
+            aptSlot.appendChild(aptPatient)
+            timeSlot.appendChild(aptSlot)
+        });
+        aptHeader.insertAdjacentElement("afterend", timeSlot)
+        
+    }
+
+    insertBlankDivs(apt){
+    const timeSlot = document.getElementById(`${apt.id}`)
+        for (let index = apt.patients.length; index < apt.maxTests; index++) {
+            const aptSpace = document.createElement('li')
+            aptSpace.setAttribute("id", `empty-${apt.id}-${index}`)
+            aptSpace.setAttribute("class", "leading-normal")
+            aptSpace.setAttribute("draggable", "true")
+            aptSpace.innerHTML = "<br>"
+            this.bindDragDrop(aptSpace)
+            timeSlot.appendChild(aptSpace)
+        }
+    }
+
     postNewAppointment(event){
         const myForm = event.target.form
         event.preventDefault()
@@ -62,13 +94,20 @@ class AppContainer {
         }
     }
 
-    checkForm(form){
-        if(form.test_date.value == "" || form.start_time.value == "" || form.end_time.value == "" || form.test_per_apt.value == "" ){
-            return false
-        } else {
-            return true
-        }
-
+    renderAppointmentInfo(){
+        const col = document.getElementById('appointment-info')
+        const info = document.createElement("div")
+        info.setAttribute("id", "selector-div")
+        const appointmentSelect = document.createElement("SELECT")
+        appointmentSelect.setAttribute("id", "date-select")
+        Appointment.allDates.sort().forEach(date => {
+            const option = document.createElement("option")
+            option.value = date
+            option.text = date
+            appointmentSelect.appendChild(option)
+        });
+        info.appendChild(appointmentSelect)
+        col.appendChild(info)
     }
 
     renderTestTimes(date){
@@ -85,20 +124,30 @@ class AppContainer {
             });
     }
 
-    renderAppointmentInfo(){
-        const col = document.getElementById('appointment-info')
-        const info = document.createElement("div")
-        info.setAttribute("id", "selector-div")
-        const appointmentSelect = document.createElement("SELECT")
-        appointmentSelect.setAttribute("id", "date-select")
-        Appointment.allDates.sort().forEach(date => {
-            const option = document.createElement("option")
-            option.value = date
-            option.text = date
-            appointmentSelect.appendChild(option)
-        });
-        info.appendChild(appointmentSelect)
-        col.appendChild(info)
+    renderUnassignedPatients(){
+        const col = document.getElementById('patients')
+        col.innerHTML = ""
+        const patientList = document.createElement("ul")
+            Patient.allUnassigned.forEach(patient => {
+                const patientSlot = document.createElement("li")
+                patientSlot.setAttribute("id", `unassigned-${patient.id}`)
+                const p = document.createElement("div")
+                p.dataset.patientId = patient.id
+                p.setAttribute("id", `patient-id-${patient.id}`)
+                p.innerHTML = patient.fullName
+                patientSlot.appendChild(p)
+                patientList.appendChild(patientSlot)
+                col.appendChild(patientList)
+                this.bindDragDrop(patientSlot)
+                this.bindDragDrop(p)       
+            })
+            this.bindDragDrop(patientList)
+            col.appendChild(patientList)
+            const blankSlot = document.createElement("li")
+            blankSlot.setAttribute("id", 'blank-patient')
+            blankSlot.innerHTML="<br>"
+            this.bindDragDrop(blankSlot)
+            patientList.appendChild(blankSlot)
     }
 
     updateAppointmentInfo(){
@@ -130,68 +179,21 @@ class AppContainer {
             });
     }
 
-    insertScheduledPatientUl(aptHeader, apt){
-        const timeSlot = document.createElement('ul')
-        timeSlot.setAttribute("id", `${apt.id}`)
-        apt.patients.forEach(patient => {
-            const aptSlot = document.createElement('li')
-            aptSlot.setAttribute("id", `patient-slot-${patient.id}`)
-            const aptPatient = document.createElement('div')
-            aptPatient.dataset.patientId = patient.id
-            aptPatient.setAttribute("id", `patient-${patient.id}`)
-            this.bindDragDrop(aptSlot)
-            this.bindDragDrop(aptPatient)
-            aptPatient.innerHTML = `${patient.fullName}`
-            aptSlot.appendChild(aptPatient)
-            timeSlot.appendChild(aptSlot)
-        });
-        aptHeader.insertAdjacentElement("afterend", timeSlot)
-        
-    }
+   
 
-    insertBlankDivs(apt){
-    const timeSlot = document.getElementById(`${apt.id}`)
-        for (let index = apt.patients.length; index < apt.maxTests; index++) {
-            const aptSpace = document.createElement('li')
-            aptSpace.setAttribute("id", `empty-${apt.id}-${index}`)
-            aptSpace.setAttribute("class", "leading-normal")
-            aptSpace.setAttribute("draggable", "true")
-            aptSpace.innerHTML = "<br>"
-            this.bindDragDrop(aptSpace)
-            timeSlot.appendChild(aptSpace)
-        }
-    }
 
-    //Move to Patient?
-    renderUnassignedPatients(){
-        const col = document.getElementById('patients')
-        col.innerHTML = ""
-        const patientList = document.createElement("ul")
-            Patient.allUnassigned.forEach(patient => {
-                const patientSlot = document.createElement("li")
-                patientSlot.setAttribute("id", `unassigned-${patient.id}`)
-                const p = document.createElement("div")
-                p.dataset.patientId = patient.id
-                p.setAttribute("id", `patient-id-${patient.id}`)
-                p.innerHTML = patient.fullName
-                patientSlot.appendChild(p)
-                patientList.appendChild(patientSlot)
-                col.appendChild(patientList)
-                this.bindDragDrop(patientSlot)
-                this.bindDragDrop(p)       
-            })
-            this.bindDragDrop(patientList)
-            col.appendChild(patientList)
-            const blankSlot = document.createElement("li")
-            blankSlot.setAttribute("id", 'blank-patient')
-            blankSlot.innerHTML="<br>"
-            this.bindDragDrop(blankSlot)
-            patientList.appendChild(blankSlot)
-    }
-
+    //HELPERS
     allowDrop(ev) {
         ev.preventDefault();
-      }
+    }
+    
+    checkForm(form){
+        if(form.test_date.value == "" || form.start_time.value == "" || form.end_time.value == "" || form.test_per_apt.value == "" ){
+            return false
+        } else {
+            return true
+        }
+    }
       
     drag(ev) {
         const obj = {elementId: `${ev.target.id}`, parentElementId: `${ev.target.parentElement.id}`}
@@ -205,8 +207,7 @@ class AppContainer {
         const parsedData = JSON.parse(data)
         const draggedEl = document.getElementById(parsedData.elementId)
         const elDraggedFrom = document.getElementById(parsedData.parentElementId)
-        //ifpatient is already in the same slot don't move
-       
+        //if patient is already in the same slot don't move
       if (ev.target.innerHTML !=  "" && ev.target.parentElement === draggedEl.parentElement.parentElement ) {
         return false;
         } 
