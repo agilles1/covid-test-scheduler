@@ -1,16 +1,11 @@
+//Responsible for backend calls and rendering
 class AppContainer {
     url = "http://localhost:3000"
     
     getTestTimes(){
         fetch(`${this.url}/test_times`)
         .then(res => res.json())
-        .then(data => data.forEach(apt => {
-            const appointment = new Appointment(apt.id, apt.time, apt.duration, apt.max_tests, apt.location);
-                apt.patients.forEach(patient => {
-                    const newPatient = new Patient(patient.id, patient.first_name, patient.last_name)
-                    appointment.patients.push(newPatient)
-            });
-        }))
+        .then(data => Appointment.createAppointmentsFromData(data))
         .then(apt => {
             this.renderAppointmentInfo()
             this.bindSelector()
@@ -50,18 +45,12 @@ class AppContainer {
                 }})
             })
             .then(resp => resp.json())
+            //Clear local db for repopulating to avoid duplications
             .then(
                 Appointment.all = [],
                 Appointment.allDates = [],
                 Patient.all = [])
-            .then(data => 
-                data.forEach(apt => {
-                const appointment = new Appointment(apt.id, apt.time, apt.duration, apt.max_tests, apt.location);
-                    apt.patients.forEach(patient => {
-                        const newPatient = new Patient(patient.id, patient.first_name, patient.last_name)
-                        appointment.patients.push(newPatient)
-                })
-            }))
+            .then(data => Appointment.createAppointmentsFromData(data))
             .then(apt => {
                 this.getUnassignedPatients()
                 this.updateAppointmentInfo()
@@ -82,8 +71,6 @@ class AppContainer {
 
     }
 
-
-//move to Appointments?
     renderTestTimes(date){
         const col = document.getElementById('appointments')
         col.innerHTML =""
@@ -97,7 +84,7 @@ class AppContainer {
                 this.insertBlankDivs(apt)
             });
     }
-//move to Appointment?
+
     renderAppointmentInfo(){
         const col = document.getElementById('appointment-info')
         const info = document.createElement("div")
@@ -245,48 +232,15 @@ class AppContainer {
     bindSelector(){
         const dateSelector = document.getElementById("date-select")
         dateSelector.addEventListener("change", (event) => {
-            this.saveAppointmentsWithPatients()
-            this.saveUnassignedPatients()
+            Appointment.saveAppointmentsWithPatients()
+            Patient.saveUnassignedPatients()
             const date = event.target.value
             this.updateTestTimes(date)
             this.renderUnassignedPatients()
         })
     }
 
-//Move to Appointment?
-    saveAppointmentsWithPatients(){
-        const schedule = document.getElementById("appointments")
-   
-        for (const item of schedule.children) { 
-            if (!item.id.includes("header")) {
-                const aptObj = Appointment.all.find(apt => apt.id === parseInt(item.id))
-                aptObj.patients = []
-                for (const p of item.children){
-                    for (const e of p.children){
-                        if (Patient.all.find(pt => pt.id === parseInt(e.dataset.patientId))){
-                            aptObj.patients.push(Patient.all.find(pt => pt.id === parseInt(p.children[0].dataset.patientId)))
-                        }
-                    }
-                }
-                
-            } 
-        }
-    }
-//Move to Patient?
-    saveUnassignedPatients(){
-        const unassignedPatientList = document.getElementById("patients")
-        Patient.allUnassigned = []
 
-        for (const patient of unassignedPatientList.children){
-            for (const child of patient.children){
-                for (const p of child.children){
-                    if (Patient.all.find(pt => pt.id === parseInt(p.dataset.patientId))){
-                        const patientObj = Patient.all.find(pt => pt.id === parseInt(p.dataset.patientId))
-                    Patient.allUnassigned.push(patientObj)}
-                }
-            }
-        }
-
-    }
+    
 
 }
