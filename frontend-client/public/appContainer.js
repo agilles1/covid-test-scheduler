@@ -179,9 +179,6 @@ class AppContainer {
             });
     }
 
-   
-
-
     //HELPERS
     allowDrop(ev) {
         ev.preventDefault();
