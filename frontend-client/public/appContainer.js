@@ -179,6 +179,18 @@ class AppContainer {
             });
     }
 
+    randomAssignPatient(){
+        
+        const firstEmpty = document.getElementsByClassName("leading-normal")[0]
+        const firstUnassignedPatient = Patient.allUnassigned[0]
+        const aptPatient = document.createElement('div')
+        aptPatient.dataset.patientId = firstUnassignedPatient.id
+        aptPatient.setAttribute("id", `patient-${firstUnassignedPatient.id}`)
+        aptPatient.innerText = `${firstUnassignedPatient.fullName}`
+        firstEmpty.appendChild(aptPatient)
+        
+    }
+
     //HELPERS
     allowDrop(ev) {
         ev.preventDefault();
